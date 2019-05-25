@@ -1,0 +1,225 @@
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule NetworkAdminPermissionSystem {
+  description: "Can READ all system resources"
+  participant: "ANY"
+  operation: READ
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule ParticipantPermissionHistorian{
+  description: "can write historian record to Historian"
+  participant: "ANY"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule ParticipantHistorianReadPermission{
+  description: "can read historian record"
+  participant: "ANY"
+  operation: READ
+  resource(r): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
+  action: ALLOW
+}
+
+rule DocumentReadPermission{
+  description: "Can perform read of document resources"
+  participant(p): "org.makerchecker.User"
+  operation: READ
+  resource(r): "org.makerchecker.Document"
+  condition:(r.maker.getIdentifier() == p.getIdentifier() || r.checker.getIdentifier() == p.getIdentifier())
+  action: ALLOW
+}
+
+rule CreateUserTransactionPermission{
+  description: "can create user"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: CREATE
+  resource: "org.makerchecker.CreateUser"
+  action: ALLOW
+}
+
+rule UpdateUserTransactionPermission{
+  description: "can update user"
+  participant: "org.makerchecker.User"
+  operation: CREATE
+  resource: "org.makerchecker.UpdateUser"
+  action: ALLOW
+}
+
+rule DeleteUserTransactionPermission{
+  description: "can delete user"
+  participant: "org.makerchecker.User"
+  operation: CREATE
+  resource: "org.makerchecker.DeleteUser"
+  action: ALLOW
+}
+
+rule ReadUserPermission{
+  description: "Can perform read of user list"
+  participant: "org.makerchecker.User"
+  operation: READ
+  resource: "org.makerchecker.User"
+  action: ALLOW
+}
+
+rule CreateUserPermission{
+  description: "create user permission"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: CREATE
+  resource: "org.makerchecker.User"
+  transaction: "org.makerchecker.CreateUser"
+  action: ALLOW
+}
+
+rule UpdateUserPermission{
+  description: "can update user"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: UPDATE
+  resource: "org.makerchecker.User"
+  transaction: "org.makerchecker.UpdateUser"
+  action: ALLOW
+}
+
+rule DeleteUserPermission{
+  description: "can delete user"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: UPDATE
+  resource: "org.makerchecker.User"
+  transaction: "org.makerchecker.DeleteUser"
+  action: ALLOW
+}
+
+rule CreateDocumentRequestTransactionPermission{
+  description: "can create document"
+  participant: "org.makerchecker.User"
+  operation: CREATE,READ
+  resource: "org.makerchecker.CreateDocumentRequest"
+  action: ALLOW
+}
+
+rule UpdateDocumentRequestTransactionPermission{
+  description: "can update document"
+  participant: "org.makerchecker.User"
+  operation: CREATE,READ
+  resource: "org.makerchecker.UpdateDocumentRequest"
+  action: ALLOW
+}
+
+rule DeleteDocumentRequestTransactionPermission{
+  description: "can delete document"
+  participant: "org.makerchecker.User"
+  operation: CREATE,READ
+  resource: "org.makerchecker.DeleteDocumentRequest"
+  action: ALLOW
+}
+
+rule AcceptDocumentStateTransactionPermission{
+  description: "can accept document"
+  participant: "org.makerchecker.User"
+  operation: CREATE,READ
+  resource: "org.makerchecker.AcceptDocumentState"
+  action: ALLOW
+}
+
+rule RejectDocumentStateTransactionPermission{
+  description: "can reject document"
+  participant: "org.makerchecker.User"
+  operation: CREATE,READ
+  resource: "org.makerchecker.RejectDocumentState"
+  action: ALLOW
+}
+
+rule CreateDocumentRequestPermission{
+  description: "can create document"
+  participant: "org.makerchecker.User"
+  operation: CREATE
+  resource: "org.makerchecker.Document"
+  transaction: "org.makerchecker.CreateDocumentRequest"
+  action: ALLOW
+}
+
+rule UpdateDocumentRequestPermission{
+  description: "can update document"
+  participant(p): "org.makerchecker.User"
+  operation: UPDATE
+  resource(r): "org.makerchecker.Document"
+  transaction(tx): "org.makerchecker.UpdateDocumentRequest"
+  condition:(p.getIdentifier() == r.maker.getIdentifier())
+  action: ALLOW
+}
+
+rule DeleteDocumentRequestPermission{
+  description: "can delete document"
+  participant(p): "org.makerchecker.User"
+  operation: UPDATE
+  resource(r): "org.makerchecker.Document"
+  transaction(tx): "org.makerchecker.DeleteDocumentRequest"
+  condition:(p.getIdentifier() == r.maker.getIdentifier())
+  action: ALLOW
+}
+
+rule RejectDocumentPermission{
+  description: "can reject document"
+  participant(p): "org.makerchecker.User"
+  operation: UPDATE
+  resource(r): "org.makerchecker.Document"
+  transaction(tx): "org.makerchecker.RejectDocumentState"
+  condition:(p.getIdentifier() == r.checker.getIdentifier())
+  action: ALLOW
+}
+
+rule AcceptDocumentPermission{
+  description: "can accept document"
+  participant(p): "org.makerchecker.User"
+  operation: UPDATE
+  resource(r): "org.makerchecker.Document"
+  transaction(tx): "org.makerchecker.AcceptDocumentState"
+  condition:(p.getIdentifier() == r.checker.getIdentifier())
+  action: ALLOW
+}
+
+rule FinalDocumentReadPermission{
+  description: "Can perform read of final document resources"
+  participant(p): "org.makerchecker.User"
+  operation: READ
+  resource(r): "org.makerchecker.FinalDocument"
+  condition:(r.maker.getIdentifier() == p.getIdentifier() || r.checker.getIdentifier() == p.getIdentifier())
+  action: ALLOW
+}
+
+rule AcceptFinalDocumentCreatePermission{
+  description: "can accept final document creation"
+  participant: "org.makerchecker.User"
+  operation: CREATE
+  resource: "org.makerchecker.FinalDocument"
+  transaction: "org.makerchecker.AcceptDocumentState"
+  action: ALLOW
+}
+
+rule AcceptFinalDocumentUpdatePermission{
+  description: "can accept document"
+  participant(p): "org.makerchecker.User"
+  operation: UPDATE
+  resource(r): "org.makerchecker.FinalDocument"
+  transaction(tx): "org.makerchecker.AcceptDocumentState"
+  condition:(p.getIdentifier() == r.checker.getIdentifier())
+  action: ALLOW
+}
