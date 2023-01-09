@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "loopback-connector-mongodb": "^4.2.0",
-    "passport-jwt": "^4.0.0",
+    "passport-jwt": "^4.0.1",
     "uuid": "^3.3.2"
   }
 }
